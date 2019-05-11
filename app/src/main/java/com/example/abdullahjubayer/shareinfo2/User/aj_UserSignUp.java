@@ -46,10 +46,10 @@ public class aj_UserSignUp extends AppCompatActivity  {
     Button signUP;
     TextView textView;
     CircleImageView imageView;
-    Uri profileImage;
+    Uri profileImage=null;
     FirebaseFirestore db;
     FirebaseAuth mAuth;
-    String downloadUrl;
+    String downloadUrl=null;
     ProgressBar progressBar ;
     SharedPreferences preferences;
 
@@ -105,26 +105,16 @@ public class aj_UserSignUp extends AppCompatActivity  {
         signUP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!validate()){
-                    Toast.makeText(aj_UserSignUp.this,"Please Fill All Data Correctly",Toast.LENGTH_LONG).show();
-                }
-                else {
-
-                    createUserr();
-
+                if (validate()){
+                    String email = email_et.getText().toString();
+                    uploadImage(email);
+                    progressBar.setVisibility(View.VISIBLE);
+                    signUP.setEnabled(false);
                 }
             }
         });
     }
 
-    private void createUserr() {
-
-
-         String email = email_et.getText().toString();
-        uploadImage(email);
-        progressBar.setVisibility(View.VISIBLE);
-
-    }
 
     private void uploadImage(String firebase_email) {
 
@@ -150,18 +140,18 @@ public class aj_UserSignUp extends AppCompatActivity  {
                     }
                     else {
                         Toast.makeText(aj_UserSignUp.this, "Picture Upload failed.",Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
+                        signUP.setEnabled(true);
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    progressBar.setVisibility(View.INVISIBLE);
+                    progressBar.setVisibility(View.GONE);
+                    signUP.setEnabled(true);
                 }
             });
 
-        }else{
-            progressBar.setVisibility(View.INVISIBLE);
-            Toast.makeText(aj_UserSignUp.this, "Profile Picture Not Selected",Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -177,7 +167,7 @@ public class aj_UserSignUp extends AppCompatActivity  {
         String password = passs_et.getText().toString();
 
 
-        if (!(downloadUrl.isEmpty())){
+        if (downloadUrl != null){
             Map< String, Object > newContact = new HashMap< >();
 
             newContact.put("Name", name);
@@ -199,6 +189,7 @@ public class aj_UserSignUp extends AppCompatActivity  {
 
                                     Toast.LENGTH_SHORT).show();
                             progressBar.setVisibility(View.INVISIBLE);
+                            signUP.setEnabled(true);
 
 
                         }
@@ -217,13 +208,15 @@ public class aj_UserSignUp extends AppCompatActivity  {
 
                             Log.d("TAG", e.toString());
                             progressBar.setVisibility(View.INVISIBLE);
-
+                            signUP.setEnabled(true);
                         }
 
                     });
 
         }else {
-            Toast.makeText(aj_UserSignUp.this, "Download URL Null.",Toast.LENGTH_SHORT).show();
+            progressBar.setVisibility(View.INVISIBLE);
+            signUP.setEnabled(true);
+            Toast.makeText(aj_UserSignUp.this, "Imag URL Null.",Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -243,13 +236,14 @@ public class aj_UserSignUp extends AppCompatActivity  {
                 }else {
                         signUP.setEnabled(false);
                         Toast.makeText(aj_UserSignUp.this,"Account Already Exists",Toast.LENGTH_LONG).show();
-
+                        progressBar.setVisibility(View.INVISIBLE);
 
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                signUP.setEnabled(true);
                 progressBar.setVisibility(View.INVISIBLE);
                 Toast.makeText(aj_UserSignUp.this,"Company Not Found",Toast.LENGTH_LONG).show();
             }
@@ -338,6 +332,11 @@ public class aj_UserSignUp extends AppCompatActivity  {
             valid=false;
         } else {
             work_at.setError(null);
+        }
+        if (profileImage == null){
+            valid=false;
+            Toast.makeText(aj_UserSignUp.this, "Profile Picture Not Selected",Toast.LENGTH_SHORT).show();
+
         }
 
 

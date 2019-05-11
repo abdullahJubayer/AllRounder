@@ -46,8 +46,8 @@ public class aj_admin_signUp extends AppCompatActivity {
     Button admin_signup;
     TextView editText;
     CircleImageView imageView;
-    Uri profileImage;
-    String downloadUrl;
+    Uri profileImage=null;
+    String downloadUrl=null;
     FirebaseFirestore db;
     FirebaseAuth mAuth;
     private static final int RQ_CODE =101 ;
@@ -100,13 +100,11 @@ public class aj_admin_signUp extends AppCompatActivity {
         admin_signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!validate()){
-                    Toast.makeText(aj_admin_signUp.this,"Please Fill All Data Correctly",Toast.LENGTH_LONG).show();
-                }
-                else {
-                     String email = ad_email.getText().toString();
+                if (validate()){
+                    String email = ad_email.getText().toString();
                     uploadImage(email);
-                   progressBar.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.VISIBLE);
+                    admin_signup.setEnabled(false);
 
                 }
             }
@@ -149,9 +147,12 @@ public class aj_admin_signUp extends AppCompatActivity {
                                     Toast.makeText(aj_admin_signUp.this, "User Registered Success",
                                             Toast.LENGTH_SHORT).show();
                                     progressBar.setVisibility(View.INVISIBLE);
+                                    admin_signup.setEnabled(true);
+
 
                                 } else {
-
+                                    admin_signup.setEnabled(true);
+                                    progressBar.setVisibility(View.INVISIBLE);
                                     Toast.makeText(aj_admin_signUp.this, "User Registered Failed", Toast.LENGTH_SHORT).show();
                                 }
 
@@ -162,6 +163,8 @@ public class aj_admin_signUp extends AppCompatActivity {
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(aj_admin_signUp.this, "User Registered Failed" + e.toString(), Toast.LENGTH_SHORT).show();
                         progressBar.setVisibility(View.INVISIBLE);
+                        admin_signup.setEnabled(true);
+
                     }
                 });
 
@@ -192,21 +195,21 @@ public class aj_admin_signUp extends AppCompatActivity {
                                      UploadUserData();
                                 }
                                 else {
+                                    admin_signup.setEnabled(true);
+                                    progressBar.setVisibility(View.INVISIBLE);
                                     Toast.makeText(aj_admin_signUp.this, "Picture Upload failed.",Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
+                                admin_signup.setEnabled(true);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 Toast.makeText(aj_admin_signUp.this, "Picture Upload failed.",Toast.LENGTH_SHORT).show();
 
                             }
                         });
 
-                    }else {
-                        progressBar.setVisibility(View.INVISIBLE);
-                        Toast.makeText(aj_admin_signUp.this, "Profile Picture Not Selected",Toast.LENGTH_SHORT).show();
                     }
 
     }
@@ -220,7 +223,7 @@ public class aj_admin_signUp extends AppCompatActivity {
         final String password = ad_pass.getText().toString();
 
 
-        if (!(downloadUrl.isEmpty())){
+        if (downloadUrl != null){
             Map< String, Object > newContact = new HashMap< >();
             newContact.clear();
 
@@ -253,12 +256,15 @@ public class aj_admin_signUp extends AppCompatActivity {
 
                             Log.d("TAG", e.toString());
                             progressBar.setVisibility(View.INVISIBLE);
+                            admin_signup.setEnabled(false);
 
                         }
 
                     });
 
         }else {
+            admin_signup.setEnabled(true);
+            progressBar.setVisibility(View.INVISIBLE);
             Toast.makeText(aj_admin_signUp.this, "Profile Picture Not Found",Toast.LENGTH_SHORT).show();
         }
 
@@ -342,6 +348,11 @@ public class aj_admin_signUp extends AppCompatActivity {
             valid=false;
         } else {
             ad_company.setError(null);
+        }
+        if (profileImage ==null){
+            Toast.makeText(aj_admin_signUp.this, "Image not Selected.",Toast.LENGTH_SHORT).show();
+            valid=false;
+
         }
 
         return valid;
