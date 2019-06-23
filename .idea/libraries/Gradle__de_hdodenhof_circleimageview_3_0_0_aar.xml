@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="Gradle: de.hdodenhof:circleimageview:3.0.0@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ebaef1a1ab1d1a90b4c1cd497dd9ba6e/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ebaef1a1ab1d1a90b4c1cd497dd9ba6e/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a0cd033995d718c0ba5a9852b1a95cc0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a0cd033995d718c0ba5a9852b1a95cc0/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

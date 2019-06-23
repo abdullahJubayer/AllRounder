@@ -1,5 +1,4 @@
 package com.example.abdullahjubayer.shareinfo2;
-;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
